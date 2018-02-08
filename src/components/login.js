@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from "axios";
 
 class Login extends React.Component {
 
@@ -15,7 +16,17 @@ class Login extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        alert(this.state.username)
+        var data = {username:this.state.username,password:this.state.password};
+        var token = axios.post("http://localhost:8000/token/obtain", data);
+        token.then(function (response) {
+            console.log(response);
+            if (response.status === 200) {
+                localStorage.setItem("token", response.data.token);
+            }
+            if (response.status === 400){
+                alert("lol");
+            }
+        });
     };
 
     render() {
@@ -48,12 +59,6 @@ class Login extends React.Component {
                                             <input type="password" className="form-control" name="password" id="password" required placeholder="Enter your Password" value={this.state.password} onChange={this.handleChange} />
                                         </div>
                                     </div>
-                                    {/*<div className="form-group">*/}
-                                        {/*<label className="checkbox-label">*/}
-                                            {/*<input type="checkbox" />*/}
-                                             {/*Remember me*/}
-                                        {/*</label>*/}
-                                    {/*</div>*/}
                                     <div className="form-group text-center">
                                         <button type="submit" className="btn btn-primary">
                                             Sign in
