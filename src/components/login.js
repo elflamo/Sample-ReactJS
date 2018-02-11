@@ -1,32 +1,35 @@
 import React from 'react';
-import axios from "axios";
+import {loginApi} from "../api";
+// import {Redirect} from 'react-router';
 
 class Login extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {username:"",password:""};
+        this.state = {
+            username:"",
+            password:"",
+        };
     }
 
     handleChange = event => {
         this.setState({
-            [event.target.id]: event.target.value
+            [event.target.id]: event.target.value,
         });
     };
 
     handleSubmit = event => {
         event.preventDefault();
         var data = {username:this.state.username,password:this.state.password};
-        var token = axios.post("http://localhost:8000/token/obtain", data);
+        var token = loginApi(data);
         token.then(function (response) {
             console.log(response);
-            if (response.status === 200) {
-                localStorage.setItem("token", response.data.token);
-            }
-            if (response.status === 400){
-                alert("lol");
-            }
-        });
+            localStorage.setItem("token", response.data.token);
+            window.location.href = "/dashboard";
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
     };
 
     render() {
@@ -65,7 +68,7 @@ class Login extends React.Component {
                                         </button>
                                     </div>
                                     <div className="form-group">
-                                        <a>Forgot your password?</a><span> | </span><a>New User?</a>
+                                        <a>Forgot your password?</a><span> | </span><a>New User? Register with us</a>
                                     </div>
                                 </form>
                             </div>
