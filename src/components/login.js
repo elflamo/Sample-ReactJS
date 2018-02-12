@@ -18,6 +18,7 @@ class Login extends React.Component {
         event.preventDefault();
         var data = {username:this.state.username,password:this.state.password};
         var token = axios.post("http://localhost:8000/token/obtain", data);
+
         token.then(function (response) {
             console.log(response);
             if (response.status === 200) {
