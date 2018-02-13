@@ -65,3 +65,9 @@
     font-weight: 700;
     cursor: pointer;
 }
+#id_signup_error {
+    font-size: 10px;
+    font-weight: 700;
+    color: red;
+    display: none;
+}

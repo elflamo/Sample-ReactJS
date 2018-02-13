@@ -1,5 +1,5 @@
 import React from 'react';
-import {loginApi} from "../api";
+import {loginApi, signupApi} from "../api";
 
 
 class MainLogin extends React.Component {
@@ -157,7 +157,7 @@ class Forgot extends React.Component {
                                 </i>
                             </span>
                             <input type="text" className="form-control" name="username" id="username" required
-                                   placeholder="Enter your registered Email" />
+                                   placeholder="Enter your registered email" />
                         </div>
                     </div>
                     <div className="form-group">
@@ -173,13 +173,50 @@ class Forgot extends React.Component {
 
 class Signup extends React.Component{
 
+    constructor(props){
+        super(props);
+        this.state = {message:""};
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange = event => {
+        document.getElementById("id_signup_error").style.display = "none";
+    };
+
+    handleSubmit = event => {
+
+        var self = this;
+
+        event.preventDefault();
+        const formData = {};
+        for (const field in this.refs){
+            formData[field] = this.refs[field].value;
+        }
+        var response = signupApi(formData);
+
+        response.then(function (data) {
+            console.log(data);
+            console.log(data.data.error);
+           if (data.status === 201) {
+               window.location.href = "/";
+           }
+           if (data.status === 200) {
+               self.setState({message:data.data.error});
+               document.getElementById("id_signup_error").innerText = "*"+self.state.message;
+               document.getElementById("id_signup_error").style.display = "block";
+           }
+        });
+
+    };
+
     render(){
 
         return(
            <div>
                <div><i className="fa fa-arrow-left" onClick={this.props.handlesignup}><span className="back"> Go back</span></i></div>
                <h3 className="text-center">Signup Form</h3>
-               <form className="signup-form">
+               <form className="signup-form" onSubmit={this.handleSubmit}>
                    <div className="form-group">
                        <div className="form-group">
                            <div className="input-group">
@@ -187,7 +224,7 @@ class Signup extends React.Component{
                                 <i className="fa fa-envelope fa" aria-hidden="true">
                                 </i>
                             </span>
-                               <input type="email" className="form-control" name="email" id="email" required placeholder="Enter your Email" />
+                               <input ref="email" type="email" className="form-control" name="email" id="email" required placeholder="Enter your Email" onChange={this.handleChange} />
                            </div>
                        </div>
                        <div className="form-group">
@@ -196,7 +233,7 @@ class Signup extends React.Component{
                                 <i className="fa fa-lock fa-lg" aria-hidden="true">
                                 </i>
                             </span>
-                               <input type="password" className="form-control" name="password" id="password" required placeholder="Enter your Password" />
+                               <input ref="password" type="password" className="form-control" name="password" id="password" required placeholder="Enter your Password" onChange={this.handleChange} />
                            </div>
                        </div>
                        <div className="form-group">
@@ -205,11 +242,11 @@ class Signup extends React.Component{
                                 <i className="fa fa-lock fa-lg" aria-hidden="true">
                                 </i>
                             </span>
-                               <input type="password" className="form-control" name="confirm_password" id="confirm_password" required placeholder="Confirm your Password" />
+                               <input ref="confirm_password" type="password" className="form-control" name="confirm_password" id="confirm_password" required placeholder="Confirm your Password" onChange={this.handleChange} />
                            </div>
                        </div>
                        <div className="form-group">
-                           <div className="signup-error">
+                           <div className="signup-error" id="id_signup_error">
 
                            </div>
                        </div>
