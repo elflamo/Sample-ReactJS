@@ -1,7 +1,12 @@
-body {
-    background-image: url("../images/maxresdefault.jpg");
+.home {
+    background: url("../images/maxresdefault.jpg") no-repeat center center fixed;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
-    background-repeat: no-repeat;
     font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
 }
 .login{
@@ -19,6 +24,25 @@ body {
     padding-bottom: 20px;
     font-size: 28px;
 }
+.login a{
+    text-decoration: none;
+    cursor: pointer;
+    color: #204d74;
+    font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+}
+.login a:hover{
+    font-weight: 700;
+}
+.login #or{
+    font-weight: 700;
+}
+.login #id_error {
+    font-size: 10px;
+    font-weight: 700;
+    color: red;
+    display: none;
+}
 .login-form {
     padding: 10px 20px 0;
 }
@@ -32,4 +56,12 @@ body {
 .checkbox-label input{
     position: absolute;
     margin-left: -20px;
+}
+.back {
+    font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+}
+.back:hover {
+    font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    cursor: pointer;
 }

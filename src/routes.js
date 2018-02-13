@@ -1,6 +1,6 @@
 import React from 'react';
 import {Route, Switch, BrowserRouter} from 'react-router-dom';
-import Login from './components/login';
+import MainLogin from './components/loginPage';
 import Dashboard from './components/dashboard';
 import './containers/home.css';
 
@@ -10,7 +10,7 @@ class Customroutes extends React.Component{
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route exact path="/" component={Login}/>
+                    <Route exact path="/" component={MainLogin}/>
                     <Route exact path="/dashboard" component={Dashboard}/>
                 </Switch>
             </BrowserRouter>
