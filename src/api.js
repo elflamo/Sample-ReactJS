@@ -9,3 +9,15 @@ export function loginApi (data) {
 export function signupApi(data) {
     return axios.post("http://localhost:8000/signup", data)
 }
+
+export function sendOtpApi(data) {
+    return axios.post("http://localhost:8000/send/reset/otp", data)
+}
+
+export function checkOtpApi(data) {
+    return axios.post("http://localhost:8000/check/otp", data)
+}
+
+export function resetPasswordApi(data) {
+    return axios.post("http://localhost:8000/reset/password", data)
+}

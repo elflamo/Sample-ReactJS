@@ -1,5 +1,5 @@
 import React from 'react';
-import {loginApi, signupApi} from "../api";
+import {loginApi, signupApi, checkOtpApi, resetPasswordApi, sendOtpApi} from "../api";
 
 
 class MainLogin extends React.Component {
@@ -17,27 +17,55 @@ class MainLogin extends React.Component {
         super(props);
         this.state = {
             login:true,
-            forgotPassword:false,
             signup:false,
-            back:false
+            back:false,
+            sendOtp:false,
+            verifyOtp:false,
+            resetPassword:false,
+            confirmReset:false,
+            userObject:""
         };
-        this.handleForgot = this.handleForgot.bind(this);
+        this.handleSendOtp = this.handleSendOtp.bind(this);
         this.handleSignup = this.handleSignup.bind(this);
+        this.nextVerifyOtp = this.nextVerifyOtp.bind(this);
+        this.nextReset = this.nextReset.bind(this);
+        this.nextConfirm = this.nextConfirm.bind(this);
     }
-
-    handleForgot = event => {
-        this.setState({
-            login: !this.state.login,
-            forgotPassword: !this.state.forgotPassword,
-            back:!this.state.back
-        });
-    };
 
     handleSignup = event => {
         this.setState({
             login: !this.state.login,
             signup: !this.state.signup,
             back:!this.state.back
+        });
+    };
+
+    handleSendOtp = event => {
+        this.setState({
+            login: !this.state.login,
+            sendOtp: !this.state.sendOtp,
+            back:!this.state.back
+        });
+    };
+
+    nextVerifyOtp = event => {
+        this.setState({
+            sendOtp:false,
+            verifyOtp:true
+        });
+    };
+
+    nextReset = event => {
+        this.setState({
+            verifyOtp:false,
+            resetPassword:true
+        });
+    };
+
+    nextConfirm = event => {
+        this.setState({
+            resetPassword:false,
+            confirmReset:true
         });
     };
 
@@ -49,9 +77,12 @@ class MainLogin extends React.Component {
                     <div className="row">
                         <div className="col-md-4 col-md-offset-4">
                             <div className="login" id="id_login">
-                                {this.state.login ? <Login handleforgot={this.handleForgot} handlesignup={this.handleSignup} /> :null}
-                                {this.state.forgotPassword ? <Forgot handleforgot={this.handleForgot} /> :null}
+                                {this.state.login ? <Login handleforgot={this.handleSendOtp} handlesignup={this.handleSignup} /> :null}
                                 {this.state.signup ? <Signup handlesignup={this.handleSignup} /> :null}
+                                {this.state.sendOtp ? <SendForgotOtp handleforgot={this.handleSendOtp} next={this.nextVerifyOtp} setUser={this} /> :null}
+                                {this.state.verifyOtp ? <CheckForgotOtp next={this.nextReset} setUser={this} /> :null}
+                                {this.state.resetPassword ? <ResetPassword next={this.nextConfirm} setUser={this} /> :null}
+                                {this.state.confirmReset ? <ConfirmReset/> :null}
                             </div>
                         </div>
                     </div>
@@ -142,23 +173,53 @@ class Login extends React.Component{
 }
 
 
-class Forgot extends React.Component {
+class SendForgotOtp extends React.Component{
 
-    render() {
+    constructor(props){
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        var self = this.props;
+        const formData = {};
+        formData['email'] = document.getElementById("email").value;
+
+        var hit = sendOtpApi(formData);
+        hit.then(function (response) {
+            if (response.status === 203) {
+                document.getElementById("error").innerText = response.data.error;
+            }
+            if (response.status === 200) {
+                self.setUser.setState({
+                    userObject: response.data.user
+                });
+                self.next();
+            }
+        });
+    };
+
+    render(){
         return (
             <div>
                 <div><i className="fa fa-arrow-left" onClick={this.props.handleforgot}><span className="back"> Go back</span></i></div>
                 <h3 className="text-center">Forgot your password</h3>
-                <form className="forgot-form">
+                <form className="forgot-form" onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <div className="input-group">
-                            <span className="input-group-addon">
-                                <i className="fa fa-envelope fa" aria-hidden="true">
-                                </i>
-                            </span>
-                            <input type="text" className="form-control" name="username" id="username" required
+                        <span className="input-group-addon">
+                            <i className="fa fa-envelope fa" aria-hidden="true">
+                            </i>
+                        </span>
+                            <input type="text" className="form-control" name="email" id="email" required
                                    placeholder="Enter your registered email" />
                         </div>
+                    </div>
+                    <div className="error">
+
                     </div>
                     <div className="form-group">
                         <div className="text-center">
@@ -170,6 +231,126 @@ class Forgot extends React.Component {
         );
     }
 }
+
+
+class CheckForgotOtp extends React.Component{
+
+    constructor(props){
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        var self = this.props;
+        var user = this.props.setUser.state.userObject;
+        const formData = {
+            otp:document.getElementById("otp").value,
+            email:user
+        };
+
+        var hit = checkOtpApi(formData);
+        hit.then(function (response) {
+            if (response.status === 203) {
+                document.getElementById("error").innerText = response.data.error;
+            }
+            if (response.status === 200) {
+                self.next();
+            }
+        });
+    };
+
+    render() {
+
+        return (
+            <div>
+                <h3 className="text-center">Enter Otp sent on your email</h3>
+                <form className="checkOtp-form" onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <input className="form-control" name="otp" id="otp" type="number" placeholder="Enter Otp" />
+                    </div>
+                    <div className="form-group">
+                        <div className="error">
+
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <button className="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+}
+
+
+class ResetPassword extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+        var self = this.props;
+        const formData = {};
+        formData['email'] = this.props.setUser.state.userObject;
+        formData['password'] = document.getElementById("password").value;
+        formData['confirm_password'] = document.getElementById("confirm_password").value;
+        resetPasswordApi(formData).then(function (response) {
+
+            if (response.status === 203) {
+                document.getElementById("error").innerText = response.data.error;
+            }
+            if (response.status === 200) {
+                self.next();
+            }
+        });
+    };
+
+    render() {
+
+        return (
+
+            <div>
+                <h3 className="text-center">Reset your password</h3>
+                <form className="resetPassword-form" onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <input className="form-control" name="password" type="password" id="password" placeholder="Enter new password" />
+                    </div>
+                    <div className="form-group">
+                        <input className="form-control" name="confirm_password" type="password" id="confirm_password" placeholder="Confirm new password" />
+                    </div>
+                    <div className="error">
+
+                    </div>
+                    <div className="form-group">
+                        <button className="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+}
+
+
+class ConfirmReset extends React.Component{
+
+    render() {
+
+        return(
+            <div>
+                <h3 className="text-center">Password reset complete</h3>
+                <div>
+                    Kindly <a href="/">login</a>
+                </div>
+            </div>
+        );
+    }
+}
+
 
 class Signup extends React.Component{
 
@@ -207,7 +388,6 @@ class Signup extends React.Component{
                document.getElementById("id_signup_error").style.display = "block";
            }
         });
-
     };
 
     render(){
