@@ -21,3 +21,7 @@ export function checkOtpApi(data) {
 export function resetPasswordApi(data) {
     return axios.post("http://localhost:8000/reset/password", data)
 }
+
+export function dashboardBaseApi() {
+    return axios.get("http://localhost:8000/dashboard/basics", {headers:custheaders})
+}

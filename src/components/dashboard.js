@@ -1,6 +1,17 @@
 import React from 'react';
+import {dashboardBaseApi} from '../api';
+
 
 class Dashboard extends React.Component{
+
+    componentWillMount() {
+
+        if (!localStorage.getItem("token")) {
+            window.location.href = "/";
+        }
+        let basics = dashboardBaseApi();
+    }
+
 
     render() {
 
