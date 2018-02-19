@@ -71,3 +71,39 @@
     color: red;
     display: none;
 }
+.stores {
+    padding: 10px;
+}
+.stores h3 {
+    font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+    display: inline-block;
+    font-weight: 700;
+}
+.sidebar {
+    background-color: #204d74;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 15px;
+    overflow-x: hidden;
+    height: 100%;
+    transition: 0.5s;
+    z-index: 1;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul>li {
+    padding: 10px 10px;
+}
+.sidebar ul>li>a {
+    font-size: 17px;
+    font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+.sidebar ul>li>a:hover {
+    font-weight: 700;
+}
