@@ -24,6 +24,7 @@ class SideBar extends React.Component{
                             <li><a href="#views" data-toggle="collapse">Views</a></li>
                             <li><a onClick={this.logout}>Logout</a></li>
                         </ul>
+                        <div className="collapse" id="stores">Hello</div>
                     </div>
                 </div>
             </div>
