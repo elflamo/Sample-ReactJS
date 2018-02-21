@@ -1,5 +1,6 @@
 import React from 'react';
 import {loginApi, signupApi, checkOtpApi, resetPasswordApi, sendOtpApi} from "../api";
+import {Redirect} from 'react-router';
 
 
 class MainLogin extends React.Component {
@@ -17,6 +18,7 @@ class MainLogin extends React.Component {
         super(props);
         this.state = {
             login:true,
+            forcelogin:false,
             signup:false,
             back:false,
             sendOtp:false,
@@ -30,6 +32,7 @@ class MainLogin extends React.Component {
         this.nextVerifyOtp = this.nextVerifyOtp.bind(this);
         this.nextReset = this.nextReset.bind(this);
         this.nextConfirm = this.nextConfirm.bind(this);
+        this.forceLogin = this.forceLogin.bind(this);
     }
 
     handleSignup = event => {
@@ -62,6 +65,12 @@ class MainLogin extends React.Component {
         });
     };
 
+    forceLogin = event => {
+        this.setState({
+            forcelogin:true
+        });
+    };
+
     nextConfirm = event => {
         this.setState({
             resetPassword:false,
@@ -77,12 +86,13 @@ class MainLogin extends React.Component {
                     <div className="row">
                         <div className="col-md-4 col-md-offset-4">
                             <div className="login" id="id_login">
-                                {this.state.login ? <Login handleforgot={this.handleSendOtp} handlesignup={this.handleSignup} /> :null}
+                                {this.state.login ? <Login handleforgot={this.handleSendOtp} pushLogin={this.forceLogin} handlesignup={this.handleSignup} /> :null}
                                 {this.state.signup ? <Signup handlesignup={this.handleSignup} /> :null}
                                 {this.state.sendOtp ? <SendForgotOtp handleforgot={this.handleSendOtp} next={this.nextVerifyOtp} setUser={this} /> :null}
                                 {this.state.verifyOtp ? <CheckForgotOtp next={this.nextReset} setUser={this} /> :null}
                                 {this.state.resetPassword ? <ResetPassword next={this.nextConfirm} setUser={this} /> :null}
                                 {this.state.confirmReset ? <ConfirmReset/> :null}
+                                {this.state.forcelogin ? <Redirect to="/dashboard" />: null}
                             </div>
                         </div>
                     </div>
@@ -107,10 +117,11 @@ class Login extends React.Component{
         document.getElementById("signin-btn").setAttribute("disabled","disabled");
         var data = {username:this.state.username,password:this.state.password};
         var token = loginApi(data);
+        var self = this.props.pushLogin;
         token.then(function (response) {
             console.log(response);
             localStorage.setItem("token", response.data.token);
-            window.location.href = "/dashboard";
+            self();
         })
             .catch(function (error) {
                 document.getElementById("id_error").style.display = "block";
