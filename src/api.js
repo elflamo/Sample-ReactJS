@@ -1,7 +1,5 @@
 import axios from "axios";
 
-var custheaders = {Authorization: "bearer " + localStorage.getItem("token")};
-
 export function loginApi (data) {
     return axios.post("http://localhost:8000/token/obtain", data)
 }
@@ -22,6 +20,6 @@ export function resetPasswordApi(data) {
     return axios.post("http://localhost:8000/reset/password", data)
 }
 
-export function dashboardBaseApi() {
+export function dashboardBaseApi(custheaders) {
     return axios.get("http://localhost:8000/dashboard/basics", {headers:custheaders})
 }
