@@ -44,7 +44,6 @@ class SideBar extends React.Component{
                         </Link>
                         <Link to="/offers">
                             <li className="item-menu">
-
                                 <i className="fa fa-tags" aria-hidden="true"></i>
                                 <span className="menu">Offers</span>
                             </li>
