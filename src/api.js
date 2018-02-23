@@ -23,3 +23,7 @@ export function resetPasswordApi(data) {
 export function dashboardBaseApi(custheaders) {
     return axios.get("http://localhost:8000/dashboard/basics", {headers:custheaders})
 }
+
+export function storeListApi(customheaders) {
+    return axios.get("http://localhost:8000/store/", {headers:customheaders})
+}

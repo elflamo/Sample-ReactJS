@@ -60,6 +60,9 @@ class Dashboard extends React.Component{
                     <div id="id_right" className="right">
                         <h2>Welcome to My StoreFront</h2>
                         <div className="pd20">
+                            <div className="col-md-12">
+                                <h3>General Stats</h3>
+                            </div>
                             <div className="col-md-3">
                                 <div className="panel info-box">
                                     <div className="panel-body">
@@ -215,6 +218,9 @@ class Dashboard extends React.Component{
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="col-md-12 basics">
+                                <h3>Audience Stats</h3>
                             </div>
                         </div>
                     </div>
